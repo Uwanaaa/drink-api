@@ -2,6 +2,7 @@ from urllib.parse import parse_qs
 from flask import Flask,request,json,Blueprint
 from flask_login import login_required
 from pymongo import MongoClient
+from ..token.tokenVerify import token_required
 import ast
 
 #Setting up the database and getting the drink collection
@@ -16,6 +17,7 @@ app = Flask(__name__)
 
 @app.route('drink-up/drinks', methods = ['GET'])
 @login_required
+@token_required
 def get_drinks():
     """Function that returns all drinks from database."""
     try:
@@ -37,6 +39,7 @@ def get_drinks():
 
 @app.route('drink-up/drinks/<drinkId>', methods = ['GET'])
 @login_required
+@token_required
 def get_one_drink(drinkId):
     """
     Function to get a single a drink
@@ -65,8 +68,9 @@ def check_api_key():
 
 
 
-@app.route('/drink-up/update-drink/<drinkId>', methods = ['POST'])   
+@app.route('drink-up/update-drink/<drinkId>', methods = ['POST'])   
 @login_required
+@token_required
 def update_drink(drinkId):
     """To update a specified drink
 
@@ -87,3 +91,8 @@ def update_drink(drinkId):
             return 'There was an error when updating the drink',500
     except:
         return "No drink was updated",500
+
+
+@app.route('drink-up/delete-drink/<drinkId>' methods = ['DELETE'])
+def delete_drink(userId):
+    userId = request

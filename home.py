@@ -19,35 +19,6 @@ def generate_api_key():
 secret_key= secrets.token_hex(32)
 
 app=Flask(__name__)
-@app.route("drink-up/signup", methods =['POST'])
-
-def create_account():
-    """Function for creating a new user"""
-    
-    try:
-        try:
-            #To get the convert the json to string
-            data = ast.literal_eval(json.dumps(request.get_json()))
-            hashed_password = hashlib.sha256(data['password'].encode).hexdigest()
-        except:
-            return "There is no data in the request",400
-        
-        #To hash the api key for security and saving it in the database
-        key = generate_api_key()
-        keys = hashlib.sha256(key.encode).hexdigest()
-        key_collection.insert_one(keys)
-        
-
-        #To save the data to the database 
-        database = user_collection.insert_one(data['name',hashed_password,'email','age'])
-        
-        #To check if the database is a list and return the json output 
-        if isinstance(database,list):
-            return jsonify([str(v) for v in database]),201
-        else:
-            return jsonify(str(database)),201
-    except:
-        return "Error creating the user. Try again",500
 
 @app.before_request
 def before_request():

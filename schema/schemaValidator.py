@@ -19,3 +19,4 @@ class drinkSchema(Schema):
 class drinkImageSchema(Schema):
     filename = fields.String(required=True, validate=validate.Length(max=255))
     file_data = fields.Raw(required=True)
+    

@@ -2,7 +2,8 @@ from flask import Flask,json,request,Blueprint,jsonify
 from flask_login import login_required
 from pymongo import MongoClient
 from urllib.parse import parse_qs
-import ast
+from ..token.tokenVerify import token_required
+import ast,hashlib
 
 client = MongoClient(host='127.0.0.1',port=27017)
 database = client['drink-up']
@@ -11,8 +12,41 @@ user_collection = database['user']
 user_bp = Blueprint('user',__name__)
 
 app = Flask(__name__)
+
+@app.route("drink-up/signup", methods =['POST'])
+
+def create_account():
+    """Function for creating a new user"""
+    
+    try:
+        try:
+            #To get the convert the json to string
+            data = ast.literal_eval(json.dumps(request.get_json()))
+            hashed_password = hashlib.sha256(data['password'].encode).hexdigest()
+        except:
+            return "There is no data in the request",400
+        
+        #To hash the api key for security and saving it in the database
+        key = generate_api_key()
+        keys = hashlib.sha256(key.encode).hexdigest()
+        key_collection.insert_one(keys)
+        
+
+        #To save the data to the database 
+        database = user_collection.insert_one(data['name',hashed_password,'email','age'])
+        
+        #To check if the database is a list and return the json output 
+        if isinstance(database,list):
+            return jsonify([str(v) for v in database]),201
+        else:
+            return jsonify(str(database)),201
+    except:
+        return "Error creating the user. Try again",500
+    
+    
 @app.route('drink-up/users', methods = ['GET'])
-@login_required       
+@login_required
+@token_required    
 def get_users():
     """
     Function for getting user
@@ -42,6 +76,7 @@ def get_users():
 
 @app.route('drink-up/update_user/<userId>', methods= ['POST'])
 @login_required
+@token_required
 def update_user(userId):
     """Function to update a user's data
 
@@ -68,6 +103,7 @@ def update_user(userId):
     
 @app.route('drink-up/delete/<userId>', methods = ['DELETE'])
 @login_required
+@token_required
 def delete_user(userId):
     """Function to delete a user
 
