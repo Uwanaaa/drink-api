@@ -13,11 +13,11 @@ class TestLogin(unittest.TestCase):
      self.assertEquals(response.status_code,200)
      self.assertEquals(response.data,b'This is working')
     def test_create_user(self):
-        response = self.app.post('drink-up/signup')
+        response = self.app.post('drink-up/signup/submit')
         self.assertEqual(response.status_code,201)
         self.assertEqual(response)###
     def test_get_all_users(self):
-        response = self.app.get('drink-up/users')
+        response = self.app.get('drink-up/users/result')
         self.assertEqual(response.status_code,200)
         self.assertEqual(response)###
     def test_get_one_user(self):
@@ -31,5 +31,5 @@ class TestLogin(unittest.TestCase):
     def test_delete_user(self):
         response = self.app.delete('drink-up/delete-user/<userId>')
         self.assertEqual(response.status_code,204)
-        self.assertEqual(response.data,b'The user has been succesfully deleted')
+        self.assertEqual(response.data,b'The user has been successfully deleted')
     

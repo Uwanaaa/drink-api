@@ -10,7 +10,7 @@
 
 <body>
     <h1>Create Account:</h1>
-    <form action="drink-up/signup" method="post" target="drink-up/drink" autocomplete="on" novalidate>
+    <form id="signup" action="drink-up/signup/submit" method="post" target="static/login-form.html" autocomplete="on" novalidate>
         <label for="name">Name:</label>
         <input type="text" aria-placeholder="Username" id="name" name="name" required>
 
@@ -25,13 +25,15 @@
         <label for="age">Age:</label>
         <input type="text" aria-placeholder="Age" id="age" name="age" required>
 
+        <input type="hidden" value="USER" name="role">
+
         <input type="submit" value="submit">
     </form>
     <script>
         function checkPassword() {
-            var firstPassword = document.getElementById('password').value
-            var secondPassword = document.getElementById('re-password').value
-            var message = document.getElementById('message')
+            var firstPassword = document.getElementById('password').value;
+            var secondPassword = document.getElementById('re-password').value;
+            var message = document.getElementById('message');
 
             if (firstPassword == secondPassword) {
                 message.innerHTML = "The password match";
@@ -41,6 +43,14 @@
                 message.style.color = "red";
             }
         }
+
+        function checkSubmission() {
+            var form = document.getElementById('signup');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                alert("Your account has been created");
+            });
+        };
     </script>
 </body>
 

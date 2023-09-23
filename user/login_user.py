@@ -1,4 +1,4 @@
-from flask import Flask,request,redirect,Blueprint,url_for,jsonify
+from flask import Flask,request,redirect,Blueprint,url_for,jsonify,render_template
 from flask_login import LoginManager,current_user,UserMixin,login_user,logout_user
 from ..schema.schemaValidator import userSchema
 from itsdangerous import TimedSerializer as Serializer
@@ -22,8 +22,10 @@ app.config['SECRET_KEY'] = '9c9067e71bf805928274f84ccac61a8f'
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
-@app.route('drink-up/login', methods = ['POST','GET'])
+@app.route('drink-up/login')
+def render_login():
+    return render_template('../static/login-form.html')
+@app.route('drink-up/login/submit', methods = ['POST','GET'])
 def validateDate():
     #Get data from the HTML form
     data = request.form
@@ -51,7 +53,11 @@ def login_user():
             login_user(user)
             serial = Serializer(app.config['SECRET_KEY'], expires_in=3600)#it is seconds
             token = serial.dumps({'username': name}).decode('utf-8')
-            return 'This is working'
+            response = {
+                'token': token,
+                'redirect_url': f'../static/user-profile.html?token={token}&name={name}'
+            }
+            return jsonify(response)
          else:
             return "The password is not correct for this user"
       else:

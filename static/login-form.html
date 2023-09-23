@@ -9,17 +9,31 @@
 </head>
 
 <body>
-    <form action="drink-up/login" method="get" target="drink-up/drinks" autocomplete="on">
+    <form id="login" action="drink-up/login" method="get" target="drink-up/drinks" autocomplete="on">
         <label for="name">Username:</label>
         <input type="text" aria-placeholder="Username" id="username" name="username">
 
         <label for="password">Password:</label>
         <input type="password" aria-placeholder="Password" id="password" name="password">
 
-        <input type="hidden" value="USER" name="role">
+        <input type="hidden" id="role">
 
         <input type="submit" value="submit">
     </form>
+    <script>
+        function checkSubmission() {
+            var form = document.getElementById('login');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (document.getElementById("username").value == "admin") {
+                    document.getElementById('role').value = 'ADMIN'
+                } else {
+                    document.getElementById('role').value = 'USER'
+                }
+                alert('You have logged in successfully')
+            })
+        }
+    </script>
 </body>
 
 </html>

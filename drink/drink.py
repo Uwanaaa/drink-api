@@ -95,4 +95,4 @@ def update_drink(drinkId):
 
 @app.route('drink-up/delete-drink/<drinkId>' methods = ['DELETE'])
 def delete_drink(userId):
-    userId = request
+    userId = request.p
